@@ -3,7 +3,7 @@
   <div class="main_container">
     <div class="flex1">
       <div class="info_pkmn_container">
-        <img class="rotate_pokeball" src="./assets/rotate-pokeball.png" alt="">
+        <!--img v-if="value != ''" class="rotate_pokeball" src="./assets/rotate-pokeball.png" alt=""-->
         <img class="sprite" :src="sprite" alt="">
         <div class="name">{{nombre.toUpperCase()}}</div>
         <TypesVue/>  
@@ -14,8 +14,7 @@
         <select v-model="value" @change="getData(value)">
           <option value="">Pick your Pokemon</option>
           <option v-for="(pokemon,index) in pkmnArr" :value="pokemon.name" :key="index"> {{index+1}} - {{pokemon.name.toUpperCase()}}</option>
-        </select>
-        <!--button :disabled= "value == '' ? true : false " @click="getData(value)">Search</button-->   
+        </select>   
       </div>
     </div>
     <div class="flex2">
@@ -101,7 +100,7 @@ body{
 }
 .info_pkmn_container{
   width: 250px;
-  height: 300px;
+  height: 305px;
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -128,7 +127,6 @@ body{
   border-bottom: 2px solid #3d3d3d;
 }
 .sprite{
-  margin-top: -5px;
   z-index: 1;
 }
 .pokeball{
@@ -137,9 +135,9 @@ body{
   left: 48px;
 }
 .rotate_pokeball{
-  top: 80px;
-  width: 100px;
-  height: 100px;
+  top: calc(100% - 160px);
+  width: 50px;
+  height: 50px;
   animation: rotar 1s infinite;
   position:absolute;
 }
@@ -168,6 +166,9 @@ select{
   outline: none;
   border-radius: 4px;
   font-weight: 600;
+}
+input{
+  z-index: 1;
 }
 
 

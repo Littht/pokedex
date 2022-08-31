@@ -38,7 +38,6 @@ export default createStore({
 
     allPkmn(state, getAllPkmn){
       state.pkmnArr=getAllPkmn.data.results
-      console.log(getAllPkmn)
     }
     
   },
