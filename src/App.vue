@@ -24,7 +24,11 @@
     </div>
     <div class="flex2">
       <div class="more_info">
-        <router-view></router-view>
+        <router-view v-slot="{ Component }">
+          <transition name="route" mode="out-in">
+            <component :is= "Component "></component>
+          </transition>
+        </router-view>
       </div>
       <div class="routes_container" >
         <router-link to="/">BASIC</router-link>
@@ -213,8 +217,17 @@ select{
   width: 250px;
   padding: 5px;
   outline: none;
+  border: 2px solid #3d3d3d;
   border-radius: 4px;
   font-weight: 600;
+  background-color: #5ed290;
+  color: #3d3d3d;
+}
+option{
+  font-weight: 600;
+}
+option:active{
+  background-color: #3d3d3d;
 }
 input{
   z-index: 1;
@@ -226,7 +239,8 @@ input{
   border:10px solid #3d3d3d;
   border-top: 35px solid #3d3d3d;
   border-radius: 0 0 10px 0; 
-  overflow-y:scroll
+  overflow-y:scroll;
+  overflow-x:hidden;
 }
 
 .routes_container{
@@ -266,5 +280,23 @@ input{
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #555; 
+}
+
+/* route transition*/
+.route-enter-from{
+  opacity: 0;
+  transform: translateX(350px);
+}
+
+.route-enter-active{
+  transition: all .4s ease-out;
+}
+
+.route-leave-to{
+  transform: translateX(-350px)
+}
+
+.route-leave-active{
+  transition: all .4s ease-in
 }
 </style>

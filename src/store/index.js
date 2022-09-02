@@ -18,6 +18,7 @@ export default createStore({
       abilities:[],
       dataSpeciesPkmn:[],
       moves:[],
+      evolves:[]
     }
   },
   getters: {
@@ -83,13 +84,40 @@ export default createStore({
 
     },
     
+
+    getEvolves(state, evolutionChain){
+      state.evolves=[]
+      state.evolves.push({name:evolutionChain.data.chain.species.name})
+      console.log("12",evolutionChain.data.chain.evolves_to) 
+      evolutionChain.data.chain.evolves_to.forEach( (item) => {
+        let pkm = {
+          name:item.species.name,
+          lvl:item.evolution_details[0].min_level
+        }
+        console.log("comprobacion",item.evolution_details[0])
+        state.evolves.push (pkm)
+        item.evolves_to.forEach( (item) => {
+            let pkm = {
+                        name:item.species.name,
+                        lvl:item.evolution_details[0].min_level
+                      }
+            state.evolves.push (pkm)
+        })
+      })
+
+      console.log("evoluciones",state.evolves)
+    }
+    
   },
   actions: {
     getData: async function({ commit }, value){
       let dataPkmn= await axios.get(`https://pokeapi.co/api/v2/pokemon/${value}/`)
       let speciesPkmn= await axios.get(`https://pokeapi.co/api/v2/pokemon-species/${value}/`)
       let evolutionChain = await axios.get(speciesPkmn.data.evolution_chain.url)
-      console.log(dataPkmn)
+      console.log("first",evolutionChain.data.chain)
+      
+
+      commit('getEvolves', evolutionChain)
       commit('showPkmn', dataPkmn)
       commit('moreDataPkmn', speciesPkmn)
     },
@@ -97,6 +125,17 @@ export default createStore({
     getArrPkmn: async function({ commit }){
       let getAllPkmn= await axios.get(`https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0`)
       commit('allPkmn',getAllPkmn)
+    },
+
+    validarpkm ({commit}, pkm){
+      const pokemon = {...pkm}
+      if(pokemon.min_level==null){
+      pokemon.lvl=item.evolution_details[0].trigger.name
+      }else{
+        pokemon.lvl=item.evolution_details[0].min_level
+      }
+      
+      commit('validarPkmn', pokemon)
     },
 
   },

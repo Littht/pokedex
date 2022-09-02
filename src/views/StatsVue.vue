@@ -65,7 +65,7 @@ ul li{
   position: absolute;
   top: 0;
   animation: aumentar ease-in-out 1s;
-  transition: all 1s;  
+  transition: all 1.2s;  
 }
 
 .bar_rank_1{
