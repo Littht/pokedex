@@ -1,51 +1,41 @@
 <template>
-    <div class="more_info">
-        <div class="stats">
-          <ul>
+    <div class="stats">
+      <h1 v-if="pkmnStats.length > 0">STATS</h1>
+         <ul>
             <li v-for="(stat,index) in pkmnStats" :key="index" >
-              <div class="bar " >
+                <div class="bar " >
                 <div class="text_bar" >
-                  {{stat.name.replace("-", " ").toUpperCase()}} {{stat.stat}}
+                    {{stat.name.replace("-", " ").toUpperCase()}} {{stat.stat}}
                 </div>
                 <div :class="['progress' , stat.stat <= 29 ? 'bar_rank_1': stat.stat >= 30 && stat.stat <= 59 ? 'bar_rank_2': stat.stat >= 60 && stat.stat <= 89 ? 'bar_rank_3' : stat.stat >= 90 && stat.stat <= 109 ? 'bar_rank_4' : stat.stat >= 110 && stat.stat <= 139 ? 'bar_rank_5' : 'bar_rank_6']" :style="{width:`${(stat.stat*100)/255}%`}"></div>
-              </div>
+                </div>
             </li>
-          </ul>
-          <div>{{weight}}</div>
-          <div>{{height}}</div>
-        </div>
-      </div>
+            <div v-if="sumStats!=''">TOTAL STATS {{sumStats}}</div>
+        </ul>    
+    </div>
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex'
-
-export default{
-    computed:{
-      ...mapState(['pkmnStats','height','weight'])
-    },
-    methods:{
-        ...mapActions(['getData'])
+    import { mapState } from 'vuex'
+    
+    export default{
+        computed:{
+          ...mapState(['pkmnStats','height','weight','sumStats'])
+        },
     }
-}
-
 </script>
 
 <style scoped>
-.more_info{
-  background-image: url(../assets/pantalla-background.jpg);
-  width: 350px;
-  border:10px solid #3d3d3d;
-  border-top: 35px solid #3d3d3d;
-  border-radius: 0 0 10px 0;
-  height: 350px;
-}
 .stats{
-  padding: 4px;
+  padding: 5px;
   display: flex;
   gap: .5em;
   flex-direction: column;
   font-weight: 600;
+}
+
+h1{
+  font-size:25px;
 }
 
 ul{
@@ -75,7 +65,7 @@ ul li{
   position: absolute;
   top: 0;
   animation: aumentar ease-in-out 1s;
-  transition: all .5s;  
+  transition: all 1s;  
 }
 
 .bar_rank_1{

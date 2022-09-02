@@ -4,21 +4,35 @@
     <div class="flex1">
       <div class="info_pkmn_container">
         <!--img v-if="value != ''" class="rotate_pokeball" src="./assets/rotate-pokeball.png" alt=""-->
-        <img class="sprite" :src="sprite" alt="">
+        <img class="sprite" :src="shiny==false ? sprite : shiny == true ? spriteShiny : img" >
         <div class="name">{{nombre.toUpperCase()}}</div>
         <TypesVue/>  
+      </div>
+      <div class="btn_container">
+        <button :disabled="shiny==false ? true : false" @click="shiny=false">NORMAL</button>
+        <button :disabled="shiny==true ? true : false" @click="shiny=true">SHINY</button>
       </div>
       <div class="green_led"></div>
       <div class="search">
         <img src="../src/assets/pokeball.png" alt="" class="pokeball">
+        <img src="../src/assets/pokeball.png" alt="" class="pokeball_2">
         <select v-model="value" @change="getData(value)">
           <option value="">Pick your Pokemon</option>
-          <option v-for="(pokemon,index) in pkmnArr" :value="pokemon.name" :key="index"> {{index+1}} - {{pokemon.name.toUpperCase()}}</option>
+          <option v-for="(pokemon,index) in pkmnArr" :value="index+1" :key="index"> {{index+1}} - {{pokemon.name.toUpperCase()}}</option>
         </select>   
       </div>
     </div>
     <div class="flex2">
-      <MoreInfoVue/>
+      <div class="more_info">
+        <router-view></router-view>
+      </div>
+      <div class="routes_container" >
+        <router-link to="/">BASIC</router-link>
+        <router-link to="/stats">STATS</router-link>
+        <router-link to="/training">TRAINING</router-link>
+        <router-link to="/moves">MOVES</router-link>
+        <router-link to="/evolutions">EVOLUTIONS</router-link>
+      </div>
     </div>
     
   </div> 
@@ -27,31 +41,32 @@
 <script>
   import { mapActions, mapState } from 'vuex'
   import TypesVue from './components/TypesVue.vue'
-  import MoreInfoVue from './components/MoreInfoVue.vue'
 
   export default{
     components:{
       TypesVue,
-      MoreInfoVue
+      
     },
     data(){
       return{
         value:"",
+        shiny:false,
       }
     },
 
     computed:{
-      ...mapState(['nombre','sprite','pkmnArr','pkmnStats','height','weight'])
+      ...mapState(['nombre','sprite','pkmnArr','spriteShiny']),
+
     },
 
     methods:{
-      ...mapActions(['getData','getArrPkmn']),
-
+      ...mapActions(['getData','getArrPkmn','getEvolutionChain']),
+ 
     },
     created(){
       this.getArrPkmn()
     },
-    unmounted(){
+    mounted(){
 
     }
   }
@@ -97,6 +112,7 @@ body{
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 30px;
 }
 .info_pkmn_container{
   width: 250px;
@@ -126,14 +142,37 @@ body{
   border-top: 2px solid #3d3d3d;
   border-bottom: 2px solid #3d3d3d;
 }
+img{
+  height: 50px;
+}
 .sprite{
   z-index: 1;
+  height: 200px;
+  padding: 5px;
 }
-.pokeball{
-  position:absolute;
-  bottom:0px;
-  left: 48px;
+.btn_container{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
 }
+
+.btn_container button{
+  padding: 5px;
+  width: 100px;
+  background-color: #5ed290;
+  color: #3d3d3d;
+  border: 2px solid #3d3d3d;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn_container button:disabled{
+  background-color: #5ecc8d88;
+  cursor: default;
+}
+
 .rotate_pokeball{
   top: calc(100% - 160px);
   width: 50px;
@@ -151,7 +190,7 @@ body{
   justify-content: center;
   align-items: center;
   width: 300px;
-  height: 220px;
+  height: 190px;
   gap: 5px;
   background-color: #dc0a2d;
   border-radius: 50% 50% 0 0;
@@ -159,9 +198,19 @@ body{
   border-right: 5px solid #3d3d3d;
   border-left: 5px solid #3d3d3d;
 }
+.pokeball{
+  position:absolute;
+  bottom:5px;
+  left: 5px;
+}
+.pokeball_2{
+  position:absolute;
+  bottom:5px;
+  right: 5px;
+}
 select{
   z-index: 1;
-  width: 200px;
+  width: 250px;
   padding: 5px;
   outline: none;
   border-radius: 4px;
@@ -170,12 +219,52 @@ select{
 input{
   z-index: 1;
 }
-
-
-
-img{
-  height: 200px;
+.more_info{
+  background-image: url(../src/assets/pantalla-background.jpg);
+  width: 350px;
+  height: 400px;
+  border:10px solid #3d3d3d;
+  border-top: 35px solid #3d3d3d;
+  border-radius: 0 0 10px 0; 
+  overflow-y:scroll
 }
 
+.routes_container{
+  width: 370px;
+  display: flex;
+  gap:5px;
+  flex-wrap: wrap;
+}
 
+.routes_container a{
+  padding: 5px;
+  color: #3d3d3d;
+  background-color: #5ed290;
+  border: 2px solid #3d3d3d;
+  border-radius: 4px;
+  width: 120px;
+  text-decoration: none;
+  text-align: center;
+  font-weight: 600;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f100; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background-color: #797979; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
 </style>
