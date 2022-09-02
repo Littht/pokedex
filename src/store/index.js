@@ -18,14 +18,15 @@ export default createStore({
       abilities:[],
       dataSpeciesPkmn:[],
       moves:[],
-      evolves:[]
+      evolves:[],
+      movesInfo:[]
     }
   },
   getters: {
   },
   mutations: {
     showPkmn(state, dataPkmn){
-
+      //console.log(dataPkmn)
       //guardando nombre,sprites baseExp
       state.nombre= dataPkmn.data.name
       state.sprite= dataPkmn.data.sprites.other.home.front_default
@@ -70,7 +71,7 @@ export default createStore({
           url:move.move.url
         }  
       })
-      console.log(state.moves[0].url)
+      //console.log(state.moves)
     },
 
     allPkmn(state, getAllPkmn){
@@ -88,13 +89,13 @@ export default createStore({
     getEvolves(state, evolutionChain){
       state.evolves=[]
       state.evolves.push({name:evolutionChain.data.chain.species.name})
-      console.log("12",evolutionChain.data.chain.evolves_to) 
+      //console.log("12",evolutionChain.data.chain.evolves_to) 
       evolutionChain.data.chain.evolves_to.forEach( (item) => {
         let pkm = {
           name:item.species.name,
           lvl:item.evolution_details[0].min_level
         }
-        console.log("comprobacion",item.evolution_details[0])
+        //console.log("comprobacion",item.evolution_details[0])
         state.evolves.push (pkm)
         item.evolves_to.forEach( (item) => {
             let pkm = {
@@ -105,8 +106,18 @@ export default createStore({
         })
       })
 
-      console.log("evoluciones",state.evolves)
-    }
+      //console.log("evoluciones",state.evolves)
+    },
+
+    methodMoveInfo(state, moveInfo){
+      state.movesInfo=[{
+        name: moveInfo.data.name,
+        accuracity: moveInfo.data.accuracy,
+        pp: moveInfo.data.pp,
+        type: moveInfo.data.type.name
+      }]
+      console.log(state.movesInfo)
+    },
     
   },
   actions: {
@@ -114,7 +125,8 @@ export default createStore({
       let dataPkmn= await axios.get(`https://pokeapi.co/api/v2/pokemon/${value}/`)
       let speciesPkmn= await axios.get(`https://pokeapi.co/api/v2/pokemon-species/${value}/`)
       let evolutionChain = await axios.get(speciesPkmn.data.evolution_chain.url)
-      console.log("first",evolutionChain.data.chain)
+      //console.log("first",evolutionChain.data.chain)
+
       
 
       commit('getEvolves', evolutionChain)
@@ -125,6 +137,12 @@ export default createStore({
     getArrPkmn: async function({ commit }){
       let getAllPkmn= await axios.get(`https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0`)
       commit('allPkmn',getAllPkmn)
+    },
+
+    getMoveInfo: async function({commit},move){
+      let moveInfo= await axios.get(move)
+      console.log(moveInfo)
+      commit('methodMoveInfo', moveInfo)
     },
 
     validarpkm ({commit}, pkm){
