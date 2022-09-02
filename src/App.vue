@@ -18,7 +18,7 @@
         <img src="../src/assets/pokeball.png" alt="" class="pokeball_2">
         <select v-model="value" @change="getData(value)">
           <option value="">Pick your Pokemon</option>
-          <option v-for="(pokemon,index) in pkmnArr" :value="index+1" :key="index"> {{index+1}} - {{pokemon.name.toUpperCase()}}</option>
+          <option v-for="(pokemon,index) in pokemons" :value="index+1" :key="index"> {{index+1}} - {{pokemon.name.toUpperCase()}}</option>
         </select>   
       </div>
     </div>
@@ -49,29 +49,23 @@
   export default{
     components:{
       TypesVue,
-      
     },
     data(){
       return{
-        value:"",
-        shiny:false,
+        value: "",
+        shiny: false,
       }
     },
 
     computed:{
-      ...mapState(['nombre','sprite','pkmnArr','spriteShiny']),
-
+      ...mapState(['nombre', 'sprite', 'pokemons', 'spriteShiny']),
     },
 
     methods:{
-      ...mapActions(['getData','getArrPkmn','getEvolutionChain']),
- 
-    },
-    created(){
-      this.getArrPkmn()
+      ...mapActions(['getData', 'getAllPokemons', 'getEvolutionChain']),
     },
     mounted(){
-
+      this.getAllPokemons()
     }
   }
 </script>
