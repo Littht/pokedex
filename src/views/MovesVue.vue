@@ -47,7 +47,7 @@ import { mapState, mapActions } from 'vuex';
 .container_2{
     padding: 5px;
     position: fixed;
-    top: 305px;
+    top: 300px;
     background-color: #5ed290;
     border-radius: 4px;
     border: 2px solid #3d3d3d;
@@ -67,7 +67,7 @@ ul{
     display: flex;
     flex-direction: column;
     gap: .5em;
-    margin-bottom: 120px;
+    margin-bottom: 140px;
 }
 li{
     cursor: pointer;
