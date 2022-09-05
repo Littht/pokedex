@@ -1,5 +1,5 @@
 <template>
-    <div class="container" v-if="dataSpeciesPkmn != ''">
+    <div class="container" v-if="dataSpeciesPkmn.length != []">
         <h1 >TRAINING</h1>
         <div class="info_container">
             <div>{{`CAPTURE RATE ${dataSpeciesPkmn.capture_rate}`}}</div>

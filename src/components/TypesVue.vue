@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div v-for="(tipo,index) in tiposArr" :key="index"
-          :class="['type', tipo=='dark'? 'dark' : tipo=='steel' ? 'steel' : tipo == 'water' ? 'water' : tipo == 'bug' ? 'bug': tipo=='dragon'? 'dragon': tipo=='electric' ? 'electric' : tipo=='fairy'? 'fairy': tipo=='fighting' ? 'fighting' : tipo=='flying' ? 'flying' : tipo=='ghost' ? 'ghost' : tipo=='ground' ? 'ground' : tipo=='ice' ? 'ice' : tipo=='normal' ? 'normal' : tipo=='psychic' ? 'psychic' : tipo=='grass' ? 'grass': tipo=='poison' ? 'poison' : tipo=='fire' ? 'fire' : 'rock']"
+          :class="`type ${tipo}`"
            >
             {{tipo.toUpperCase()}}
         </div>

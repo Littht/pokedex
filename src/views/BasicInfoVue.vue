@@ -1,10 +1,10 @@
 <template>
-    <div class="container"  v-if="dataSpeciesPkmn !=''">
+    <div class="container" v-if="dataSpeciesPkmn.length != []">
         <h1>BASIC INFO</h1>
         <div>{{weight}}</div>
         <div>{{height}}</div>
         <div>{{dataSpeciesPkmn.genera[7].genus.toUpperCase()}}</div>
-        <h2 v-if="abilities.length>0">- ABILITIES</h2>
+        <h2>- ABILITIES</h2>
         <ul>
             <li v-for="(ability,index) in abilities" :key="index">
                 {{index+1}} - {{ability.ability.name.replace("-", " ").toUpperCase()}}

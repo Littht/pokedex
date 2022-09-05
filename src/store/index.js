@@ -62,7 +62,8 @@ export default createStore({
     dataSpeciesPkmn: [],
     moves: [],
     evolves: [],
-    movesInfo: []
+    movesInfo: [],
+    
   }),
   mutations: {
     SET_POKEMON: (state, result) => {
@@ -75,20 +76,24 @@ export default createStore({
     },
 
     SET_POKEMONS: (state, pokemons) => {
+      state.movesInfo = []
       state.pokemons = pokemons
     },
 
     SET_MORE_POKEMON_DATA: (state, speciesPkmn) => {
-      state.dataSpeciesPkmn = speciesPkmn.data   
+      state.dataSpeciesPkmn = speciesPkmn  
+      console.log(state.dataSpeciesPkmn)
     },
 
     methodMoveInfo: (state, moveInfo) => {
-      state.movesInfo = [{
+      console.log(moveInfo)
+      state.movesInfo = {
         name: moveInfo.data.name,
-        accuracity: moveInfo.data.accuracy,
+        power: moveInfo.data.power,
+        accuracy: moveInfo.data.accuracy,
         pp: moveInfo.data.pp,
         type: moveInfo.data.type.name
-      }]
+      }
     },
 
   },
@@ -100,7 +105,6 @@ export default createStore({
 
       const pokemon = processPokemon(pokemonData)
       const evolutions = mapPokemonEvolutions(evolutionChain)
-
       commit('SET_POKEMON', pokemon)
       commit('SET_POKEMON_EVOLUTIONS', evolutions)
 
@@ -108,7 +112,7 @@ export default createStore({
 
       // commit('getEvolves', evolutionChain)
       // commit('showPkmn', dataPkmn)
-      // commit('SET_MORE_POKEMON_DATA', speciesPkmn)
+      commit('SET_MORE_POKEMON_DATA', species)
     },
 
     getAllPokemons: async ({ commit }) => {
@@ -118,8 +122,8 @@ export default createStore({
 
     getMoveInfo: async ({commit}, move) => {
       let moveInfo = await axios.get(move)
-      console.log({moveInfo})
-      // commit('methodMoveInfo', moveInfo)
+      //console.log({moveInfo})
+      commit('methodMoveInfo', moveInfo)
     },
 
     validarpkm: ({ commit }, pkm) => {
