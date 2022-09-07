@@ -4,7 +4,7 @@
         <ul>
             <li v-for="(move,index) in moves" :key="index" @click="getMoveInfo(move.url) , moveModal=true">{{index+1}} - {{move.name.replace("-", " ").toUpperCase()}}</li>
         </ul>
-        <div class="container_2" v-if="moveModal == true">
+        <div class="container_2" v-if="movesInfo.length != 0 && moveModal == true">
             <div class="header_moves">
                 <div class="close" @click="moveModal=false">CLOSE</div>
                 <div>{{movesInfo.name.replace("-", " ").toUpperCase()}}</div>

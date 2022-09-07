@@ -27,19 +27,100 @@ const processPokemon = (pokemon) => {
 }
 
 const mapPokemonEvolutions = (evolutionChain) => {
+  console.log(evolutionChain)
   const evolutions = [{ name: evolutionChain.chain.species.name }]
 
   evolutionChain.chain.evolves_to.forEach((item) => {
-    evolutions.push({
-      name: item.species.name,
-      lvl: item.evolution_details[0].min_level
-    })
-
-    item.evolves_to.forEach((item) => {
+    if(item.evolution_details[0].min_level != null && item.evolution_details[0].trigger.name=='level-up'){
       evolutions.push({
         name: item.species.name,
         lvl: item.evolution_details[0].min_level
       })
+    }else if(item.evolution_details[0].trigger.name == 'use-item'){
+      evolutions.push({
+        name: item.species.name,
+        lvl: item.evolution_details[0].trigger.name.replace("-"," ").toUpperCase(),
+        item: item.evolution_details[0].item.name.replace("-"," ").toUpperCase()
+      })
+    }else if(item.evolution_details[0].trigger.name== 'trade' && item.evolution_details[0].held_item==null){
+      evolutions.push({
+        name: item.species.name,
+        lvl: item.evolution_details[0].trigger.name.toUpperCase()
+      })
+    }else if(item.evolution_details[0].trigger.name== 'level-up' && item.evolution_details[0].known_move != null){
+      evolutions.push({
+        name: item.species.name,
+        item: `KNOW MOVE ${item.evolution_details[0].known_move.name.replace("-"," ").toUpperCase()}`
+      })
+    }else if(item.evolution_details[0].trigger.name== 'level-up' && item.evolution_details[0].min_happiness != null){
+      evolutions.push({
+        name: item.species.name,
+        item: `MIN HAPPINESS ${item.evolution_details[0].min_happiness}`
+      })
+    }else if(item.evolution_details[0].trigger.name== 'level-up' && item.evolution_details[0].min_happiness != null && time_of_day != null){
+      evolutions.push({
+        name: item.species.name,
+        item: `MIN HAPPINESS ${item.evolution_details[0].min_happiness}`
+      })
+    }
+    else if(item.evolution_details[0].location != null){
+      evolutions.push({
+        name: item.species.name,
+        item: `TRAINING LOCATION ${item.evolution_details[0].location.name}`
+      })
+    }else{
+      evolutions.push({
+        name: item.species.name,
+        lvl: item.evolution_details[0].trigger.name.replace("-"," ").toUpperCase(),
+        item: item.evolution_details[0].held_item.name.replace("-"," ").toUpperCase()
+      })
+    }
+   
+    item.evolves_to.forEach((item) => {
+      if(item.evolution_details[0].min_level != null && item.evolution_details[0].trigger.name=='level-up'){
+        evolutions.push({
+          name: item.species.name,
+          lvl: item.evolution_details[0].min_level
+        })
+      }else if(item.evolution_details[0].trigger.name == 'use-item'){
+        evolutions.push({
+          name: item.species.name,
+          lvl: item.evolution_details[0].trigger.name.replace("-"," ").toUpperCase(),
+          item: item.evolution_details[0].item.name.replace("-"," ").toUpperCase()
+        })
+      }else if(item.evolution_details[0].trigger.name== 'trade' && item.evolution_details[0].held_item==null){
+        evolutions.push({
+          name: item.species.name,
+          lvl: item.evolution_details[0].trigger.name.toUpperCase()
+        })
+      }else if(item.evolution_details[0].trigger.name== 'level-up' && item.evolution_details[0].known_move != null){
+        evolutions.push({
+          name: item.species.name,
+          item: `KNOW MOVE ${item.evolution_details[0].known_move.name.replace("-"," ").toUpperCase()}`
+        })
+      }else if(item.evolution_details[0].trigger.name== 'level-up' && item.evolution_details[0].min_happiness != null){
+        evolutions.push({
+          name: item.species.name,
+          item: `MIN HAPPINESS ${item.evolution_details[0].min_happiness}`
+        })
+      }else if(item.evolution_details[0].trigger.name== 'level-up' && item.evolution_details[0].min_happiness != null && time_of_day != null){
+        evolutions.push({
+          name: item.species.name,
+          item: `MIN HAPPINESS ${item.evolution_details[0].min_happiness}`
+        })
+      }
+      else if(item.evolution_details[0].location != null){
+        evolutions.push({
+          name: item.species.name,
+          item: `TRAINING LOCATION ${item.evolution_details[0].location.name}`
+        })
+      }else{
+        evolutions.push({
+          name: item.species.name,
+          lvl: item.evolution_details[0].trigger.name.replace("-"," ").toUpperCase(),
+          item: item.evolution_details[0].held_item.name.replace("-"," ").toUpperCase()
+        })
+      }
     })
   })
 
@@ -61,7 +142,7 @@ export default createStore({
     abilities: [],
     dataSpeciesPkmn: [],
     moves: [],
-    evolves: [],
+    evolves: null,
     movesInfo: [],
     
   }),
@@ -76,17 +157,16 @@ export default createStore({
     },
 
     SET_POKEMONS: (state, pokemons) => {
-      state.movesInfo = []
       state.pokemons = pokemons
+      console.log(state.pokemons)
     },
 
     SET_MORE_POKEMON_DATA: (state, speciesPkmn) => {
       state.dataSpeciesPkmn = speciesPkmn  
-      console.log(state.dataSpeciesPkmn)
+      
     },
 
     methodMoveInfo: (state, moveInfo) => {
-      console.log(moveInfo)
       state.movesInfo = {
         name: moveInfo.data.name,
         power: moveInfo.data.power,
@@ -102,7 +182,6 @@ export default createStore({
       const pokemonData = (await axios.get(`https://pokeapi.co/api/v2/pokemon/${value}/`)).data
       const species = (await axios.get(`https://pokeapi.co/api/v2/pokemon-species/${value}/`)).data
       const evolutionChain  = (await axios.get(species.evolution_chain.url)).data
-
       const pokemon = processPokemon(pokemonData)
       const evolutions = mapPokemonEvolutions(evolutionChain)
       commit('SET_POKEMON', pokemon)

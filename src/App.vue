@@ -16,10 +16,18 @@
       <div class="search">
         <img src="../src/assets/pokeball.png" alt="" class="pokeball">
         <img src="../src/assets/pokeball.png" alt="" class="pokeball_2">
-        <select v-model="value" @change="getData(value)">
+        <div class="pokemon_list">
+          <input type="text" v-model="search" placeholder="Search a Pokemon" v-on:keyup.enter="getData(search), search=''">
+          <div class="filtered">
+            <ul>
+              <li v-for="(pokemon,index) in filteredPokemons" :key="index" @click="getData(pokemon.name), search=''">{{pokemon.name.toUpperCase()}}</li>
+            </ul>
+          </div>
+        </div>
+        <!--select v-model="value" @change="getData(value)">
           <option value="">Pick your Pokemon</option>
           <option v-for="(pokemon,index) in pokemons" :value="index+1" :key="index"> {{index+1}} - {{pokemon.name.toUpperCase()}}</option>
-        </select>   
+        </select-->   
       </div>
     </div>
     <div class="flex2">
@@ -54,11 +62,18 @@
       return{
         value: "",
         shiny: false,
+        search:"",
+        typingTimer:"",
       }
     },
 
     computed:{
       ...mapState(['nombre', 'sprite', 'pokemons', 'spriteShiny']),
+      filteredPokemons(){
+        return this.pokemons.filter((pokemon)=>{
+          return pokemon.name.match(this.search)
+        })
+      }
     },
 
     methods:{
@@ -66,7 +81,7 @@
     },
     mounted(){
       this.getAllPokemons()
-    }
+    },
   }
 </script>
 
@@ -196,6 +211,46 @@ img{
   border-right: 5px solid #3d3d3d;
   border-left: 5px solid #3d3d3d;
 }
+
+.pokemon_list{
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  z-index: 2;
+  width:210px;
+  margin-top: 20px;
+}
+
+.pokemon_list input{
+  outline: none;
+  height: 30px;
+  padding: 2px;
+  border-radius: 4px;
+  border: 2px solid #3d3d3d;
+}
+
+.filtered{
+  height: 120px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  background-color: #5ed290;
+  padding: 2px;
+  border: 2px solid #3d3d3d;
+  border-radius: 4px;
+  
+}
+
+.filtered ul li{
+  padding: 2px;
+  cursor:pointer;
+  transition: all .2s;
+}
+
+.filtered ul li:hover{
+  background: #3d3d3d;
+  color: #fff;
+}
+
 .pokeball{
   position:absolute;
   bottom:5px;
@@ -206,6 +261,7 @@ img{
   bottom:5px;
   right: 5px;
 }
+
 select{
   z-index: 1;
   width: 250px;

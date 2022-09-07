@@ -3,6 +3,7 @@
         <h1>BASIC INFO</h1>
         <div>{{weight}}</div>
         <div>{{height}}</div>
+        <div>{{`N° POKEDEX ${dataSpeciesPkmn.id}`}}</div>
         <div>{{dataSpeciesPkmn.genera[7].genus.toUpperCase()}}</div>
         <h2>- ABILITIES</h2>
         <ul>

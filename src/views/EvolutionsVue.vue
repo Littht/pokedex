@@ -1,8 +1,8 @@
 <template>
-    <div class="container">
+    <div class="container" v-if="evolves != null">
         <h1>EVOLUTIONS</h1>
         <ul>
-            <li v-for="(pkmn, index) in evolves" :key="index">{{index+1}} - {{pkmn.name.toUpperCase()}} {{pkmn.lvl}}</li>
+            <li v-for="(pkmn, index) in evolves" :key="index">{{index+1}} - {{pkmn.name.toUpperCase()}} {{pkmn.lvl}} {{pkmn.item}}</li>
         </ul>
     </div>
 </template>
