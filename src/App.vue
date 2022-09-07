@@ -17,7 +17,7 @@
         <img src="../src/assets/pokeball.png" alt="" class="pokeball">
         <img src="../src/assets/pokeball.png" alt="" class="pokeball_2">
         <div class="pokemon_list">
-          <input type="text" v-model="search" placeholder="Search a Pokemon" v-on:keyup.enter="getData(search), search=''">
+          <input type="text" v-model="search" placeholder="Search a Pokemon" v-on:keyup.enter="getData(search.toLowerCase()), search=''">
           <div class="filtered">
             <ul>
               <li v-for="(pokemon,index) in filteredPokemons" :key="index" @click="getData(pokemon.name), search=''">{{pokemon.name.toUpperCase()}}</li>
@@ -63,7 +63,6 @@
         value: "",
         shiny: false,
         search:"",
-        typingTimer:"",
       }
     },
 
@@ -71,7 +70,7 @@
       ...mapState(['nombre', 'sprite', 'pokemons', 'spriteShiny']),
       filteredPokemons(){
         return this.pokemons.filter((pokemon)=>{
-          return pokemon.name.match(this.search)
+          return pokemon.name.match(this.search.toLowerCase())
         })
       }
     },
