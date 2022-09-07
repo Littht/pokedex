@@ -29,5 +29,6 @@ import { mapActions , mapState } from 'vuex'
     }
     ul li{
         font-weight: 600;
+        margin-bottom:8px
     }
 </style>

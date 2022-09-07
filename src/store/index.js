@@ -28,6 +28,7 @@ const processPokemon = (pokemon) => {
 }
 
 const mapPokemonEvolutions = (evolutionChain) => {
+  console.log(evolutionChain)
   const evolutions = [{ name: evolutionChain.chain.species.name }]
 
   evolutionChain.chain.evolves_to.forEach((item) => {
@@ -64,10 +65,21 @@ const mapPokemonEvolutions = (evolutionChain) => {
       })
     }
     else if(item.evolution_details[0].location != null){
-      evolutions.push({
-        name: item.species.name,
-        item: `TRAINING LOCATION ${item.evolution_details[0].location.name}`
-      })
+      for(let index of item.evolution_details){
+        if(index.location){
+          evolutions.push({
+            name: item.species.name,
+            item: `TRAINING LOCATION ${index.location.name.replace("-", " ").toUpperCase()}`
+          })
+        }else if(index.trigger.name == "use-item"){
+          evolutions.push({
+            name: item.species.name,
+            item: `USE ITEM ${index.item.name.replace("-", " ").toUpperCase()}`
+          })
+        }
+      }
+    }else if(item.evolves_to.length = 8){
+      
     }else{
       evolutions.push({
         name: item.species.name,
@@ -110,10 +122,19 @@ const mapPokemonEvolutions = (evolutionChain) => {
         })
       }
       else if(item.evolution_details[0].location != null){
-        evolutions.push({
-          name: item.species.name,
-          item: `TRAINING LOCATION ${item.evolution_details[0].location.name}`
-        })
+        for(let index of item.evolution_details){
+          if(index.location){
+            evolutions.push({
+              name: item.species.name,
+              item: `TRAINING LOCATION ${index.location.name.replace("-", " ").toUpperCase()}`
+            })
+          }else if(index.trigger.name == "use-item"){
+            evolutions.push({
+              name: item.species.name,
+              item: `USE ITEM ${index.item.name.replace("-", " ").toUpperCase()}`
+            })
+          }
+        }
       }else{
         evolutions.push({
           name: item.species.name,
