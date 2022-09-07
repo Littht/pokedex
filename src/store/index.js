@@ -10,6 +10,7 @@ const processPokemon = (pokemon) => {
 
   return {
     nombre: pokemon.name,
+    pkmnId: pokemon.id,
     sprite: pokemon.sprites.other.home.front_default ?? img,
     spriteShiny: pokemon.sprites.other.home.front_shiny ?? img,
     baseExp: pokemon.base_experience,
@@ -27,7 +28,6 @@ const processPokemon = (pokemon) => {
 }
 
 const mapPokemonEvolutions = (evolutionChain) => {
-  console.log(evolutionChain)
   const evolutions = [{ name: evolutionChain.chain.species.name }]
 
   evolutionChain.chain.evolves_to.forEach((item) => {
@@ -130,6 +130,7 @@ const mapPokemonEvolutions = (evolutionChain) => {
 export default createStore({
   state: () => ({
     nombre: "",
+    pkmnId:0,
     tiposArr: [],
     sprite: null,
     spriteShiny: null,
@@ -158,7 +159,6 @@ export default createStore({
 
     SET_POKEMONS: (state, pokemons) => {
       state.pokemons = pokemons
-      console.log(state.pokemons)
     },
 
     SET_MORE_POKEMON_DATA: (state, speciesPkmn) => {
@@ -180,7 +180,7 @@ export default createStore({
   actions: {
     getData: async ({ commit }, value) => {
       const pokemonData = (await axios.get(`https://pokeapi.co/api/v2/pokemon/${value}/`)).data
-      const species = (await axios.get(`https://pokeapi.co/api/v2/pokemon-species/${value}/`)).data
+      const species = (await axios.get(pokemonData.species.url)).data
       const evolutionChain  = (await axios.get(species.evolution_chain.url)).data
       const pokemon = processPokemon(pokemonData)
       const evolutions = mapPokemonEvolutions(evolutionChain)
@@ -213,7 +213,7 @@ export default createStore({
         pokemon.lvl = item.evolution_details[0].min_level
       }
 
-      console.log({ pokemon })
+
       
       // commit('validarPkmn', pokemon)
     },
