@@ -28,7 +28,6 @@ const processPokemon = (pokemon) => {
 }
 
 const mapPokemonEvolutions = (evolutionChain) => {
-  console.log(evolutionChain)
   const evolutions = [{ name: evolutionChain.chain.species.name }]
 
   evolutionChain.chain.evolves_to.forEach((item) => {
@@ -166,6 +165,7 @@ export default createStore({
     moves: [],
     evolves: null,
     movesInfo: [],
+    modalSearch: false,
     
   }),
   mutations: {
@@ -173,6 +173,7 @@ export default createStore({
       for (const attribute in result) {
         state[attribute] = result[attribute]
       }
+
     },
     SET_POKEMON_EVOLUTIONS: (state, evolutions) => {
       state.evolves = evolutions
@@ -197,6 +198,10 @@ export default createStore({
       }
     },
 
+    methodModalSearch: (state) =>{
+      state.modalSearch = !state.modalSearch
+    }
+
   },
   actions: {
     getData: async ({ commit }, value) => {
@@ -206,6 +211,7 @@ export default createStore({
       const pokemon = processPokemon(pokemonData)
       const evolutions = mapPokemonEvolutions(evolutionChain)
       commit('SET_POKEMON', pokemon)
+      console.log(pokemon)
       commit('SET_POKEMON_EVOLUTIONS', evolutions)
 
       // console.log({ dataPkmn, speciesPkmn, evolutionChain })

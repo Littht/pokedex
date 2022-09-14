@@ -1,6 +1,9 @@
 <template>
   
   <div class="main_container">
+    <transition name="modal">
+      <ModalVue v-if="modalSearch == true"/>
+    </transition>
     <div class="flex1">
       <div class="info_pkmn_container">
         <!--img v-if="value != ''" class="rotate_pokeball" src="./assets/rotate-pokeball.png" alt=""-->
@@ -14,16 +17,17 @@
       </div>
       <div class="green_led"></div>
       <div class="search">
+        <button @click="methodModalSearch" class="btn-search">SEARCH</button>
         <img src="../src/assets/pokeball.png" alt="" class="pokeball">
         <img src="../src/assets/pokeball.png" alt="" class="pokeball_2">
-        <div class="pokemon_list">
+        <!-- <div class="pokemon_list">
           <input type="text" v-model="search" placeholder="Search a Pokemon" v-on:keyup.enter="getData(search.toLowerCase()), search=''">
           <div class="filtered">
             <ul>
               <li v-for="(pokemon,index) in filteredPokemons" :key="index" @click="getData(pokemon.name), search=''">{{pokemon.name.toUpperCase()}}</li>
             </ul>
           </div>
-        </div>
+        </div> -->
         <!--select v-model="value" @change="getData(value)">
           <option value="">Pick your Pokemon</option>
           <option v-for="(pokemon,index) in pokemons" :value="index+1" :key="index"> {{index+1}} - {{pokemon.name.toUpperCase()}}</option>
@@ -45,18 +49,19 @@
         <router-link to="/moves">MOVES</router-link>
         <router-link to="/evolutions">EVOLUTIONS</router-link>
       </div>
-    </div>
-    
+    </div>   
   </div> 
 </template>
 
 <script>
-  import { mapActions, mapState } from 'vuex'
+  import { mapActions, mapState,mapMutations } from 'vuex'
   import TypesVue from './components/TypesVue.vue'
+  import ModalVue from './components/ModalVue.vue'
 
   export default{
     components:{
       TypesVue,
+      ModalVue
     },
     data(){
       return{
@@ -67,7 +72,7 @@
     },
 
     computed:{
-      ...mapState(['nombre', 'sprite', 'pokemons', 'spriteShiny']),
+      ...mapState(['nombre', 'sprite', 'pokemons', 'spriteShiny','modalSearch']),
       filteredPokemons(){
         return this.pokemons.filter((pokemon)=>{
           return pokemon.name.match(this.search.toLowerCase())
@@ -76,7 +81,8 @@
     },
 
     methods:{
-      ...mapActions(['getData', 'getAllPokemons', 'getEvolutionChain']),
+      ...mapActions(['getData', 'getAllPokemons', 'getEvolutionChain','methodModalSearch']),
+      ...mapMutations(['methodModalSearch'])
     },
     mounted(){
       this.getAllPokemons()
@@ -209,6 +215,19 @@ img{
   border-top: 5px solid #3d3d3d;
   border-right: 5px solid #3d3d3d;
   border-left: 5px solid #3d3d3d;
+}
+
+.btn-search{
+  padding: 5px;
+  color: #3d3d3d;
+  background-color: #5ed290;
+  border: 2px solid #3d3d3d;
+  border-radius: 4px;
+  width: 120px;
+  text-decoration: none;
+  text-align: center;
+  font-weight: 600;
+  cursor:pointer;
 }
 
 .pokemon_list{
@@ -347,5 +366,21 @@ input{
 
 .route-leave-active{
   transition: all .4s ease-in
+}
+
+.modal-enter-from{
+  opacity: 0;
+}
+
+.modal-enter-active{
+  transition: all .2s ease-out;
+}
+
+.modal-leave-to{
+  opacity:0;
+}
+
+.modal-leave-active{
+  transition: all .2s ease-in
 }
 </style>
